@@ -18,12 +18,10 @@ struct Cell: View {
     
     var body: some View {
         Button ( action: {
-            print("Tap me papa")
-            if !self.sharedState.running {
-                //if its not running can toggle
-                print("\(self.row), \(self.col)")
-                self.sharedState.driver.getState()[self.row, self.col]?.flip()
-            }
+            //toggle the cell if not running
+            //set the object to change
+            self.sharedState.objectWillChange.send()
+            self.sharedState.driver.toggleState(row: self.row, col: self.col)
         }) {
             //if alive, color red
             if self.sharedState.driver.getState(row: row, col: col) == .Alive {
@@ -31,13 +29,15 @@ struct Cell: View {
                     .fill(Color.init("CellAlive"))
                     .border(Color.black, width: 1)
             }
-            //dead, color clear
+                //dead, color clear
             else {
                 Rectangle()
                     .fill(Color.clear)
                     .border(Color.black, width: 1)
             }
         }
+            //if its running its disabled
+            .disabled(self.sharedState.running)
     }
     
 }

@@ -53,6 +53,16 @@ struct ControlOverlay: View {
                 Spacer()
                 Button(action: {
                     self.sharedState.running.toggle()
+                    //set the object to change
+                    self.sharedState.objectWillChange.send()
+                    
+                    //start running the simulation
+                    if self.sharedState.running {
+                        self.sharedState.driver.startGame()
+                    }
+                    else {
+                        self.sharedState.driver.stopGame()
+                    }
                 }) {
                     GeometryReader { geo in
                         Man().fill(Color.init("Text"))

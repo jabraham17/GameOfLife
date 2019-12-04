@@ -19,12 +19,11 @@ struct GameView: View {
             
             VStack(spacing: 0) {
                 //make rows
-                ForEach(0..<self.sharedState.driver.size.1, id: \.self) {i in
+                ForEach(0..<self.sharedState.driver.size.0, id: \.self) { i in
                     //inside each row put all the cells
                     HStack(spacing: 0) {
-                        ForEach(0..<self.sharedState.driver.size.0, id: \.self) {j in
+                        ForEach(0..<self.sharedState.driver.size.1, id: \.self) { j in
                             Cell(row: i, col: j)
-                            .environmentObject(self.sharedState)
                         }
                     }
                 }

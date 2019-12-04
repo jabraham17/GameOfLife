@@ -9,7 +9,16 @@
 import Combine
 import SwiftUI
 
-final class SharedUserState: ObservableObject {
+final class SharedUserState: ObservableObject {    
     @Published var running = false
-    @Published var driver = GameOfLifeDriver(size: (20, 40))
+    @Published var driver = GameOfLifeDriver(size: (40, 20))
+    
+    
+    //pass any state change updates through to the driver
+    var anyCancellable: AnyCancellable? = nil
+    init() {
+        anyCancellable = Publishers.CombineLatest($running, driver.$current).sink(receiveValue: {_ in
+            self.objectWillChange.send()
+        })
+    }
 }

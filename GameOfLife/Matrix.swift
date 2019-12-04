@@ -42,13 +42,11 @@ class Matrix<Element>: Sequence {
     //make a deep copy of the matrix
     func copy() -> Matrix {
         let newMatrix = Matrix(size: size)
-        for i in 0..<m {
-            for j in 0..<n {
-                print("\(i), \(j)")
+        for i in 0..<n {
+            for j in 0..<m {
                 newMatrix[i,j] = self[i,j]
             }
         }
-        print("done")
         
         return newMatrix
     }
@@ -58,11 +56,11 @@ class Matrix<Element>: Sequence {
     //make get and set subscriptable
     subscript(row: Int, col: Int) -> Element? {
         get {
-            assert(isValidIndex(row, col), "Index [\(row), \(col)] out of range")
+            assert(isValidIndex(row, col), "Index [\(row), \(col)] out of range [\(n), \(m)]")
             return backingArray[(row*m) + col]
         }
         set(newValue) {
-            assert(isValidIndex(row, col), "Index [\(row), \(col)] out of range")
+            assert(isValidIndex(row, col), "Index [\(row), \(col)] out of range [\(n), \(m)]")
             backingArray[(row*m) + col] = newValue
         }
     }

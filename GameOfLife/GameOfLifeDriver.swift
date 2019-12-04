@@ -7,9 +7,14 @@
 //
 
 import Foundation
+import Combine
+import SwiftUI
 
 //implemennt the game of life algo
-class GameOfLifeDriver {
+class GameOfLifeDriver: ObservableObject {
+    
+    let speed: TimeInterval = 0.2
+    
     var size: (Int, Int)
     //what the current state of the matrix is
     enum State {
@@ -25,10 +30,11 @@ class GameOfLifeDriver {
     enum CurrentMatrix {
         case A, B
         mutating func flip() {
+            
             self = self == .A ? .B : .A
         }
     }
-    var current: CurrentMatrix
+    @Published var current: CurrentMatrix
     
     init(size: (Int, Int)) {
         self.size = size
@@ -56,11 +62,19 @@ class GameOfLifeDriver {
     func getState(row: Int, col: Int) -> State {
         return getState()[row, col]!
     }
+    //set the current state of a specific row/col
+    func setState(_ state: State, row: Int, col: Int) {
+        getState()[row, col] = state
+    }
+    //toggle the current state of a specific row/col
+    func toggleState(row: Int, col: Int) {
+        getState()[row, col]?.flip()
+    }
     
     //move the game to the next cycle
     func cycle() {
-        for i in 0..<size.1 {
-            for j in 0..<size.0 {
+        for i in 0..<size.0 {
+            for j in 0..<size.1 {
                 if self.current == .A {
                     //current state is matrixA
                     //modify B
@@ -86,20 +100,20 @@ class GameOfLifeDriver {
         //compute surrounding indexes
         var surround: [(Int, Int)] = [(Int, Int)]()
         // left, x, right
-        var xvals = [-1,x,x+1]
+        var xvals = [x-1,x,x+1]
         // top, x, bottom
         var yvals = [y-1,y,y+1]
         
         if x == 0 {
-            xvals[0] = size.1-1
+            xvals[0] = size.0-1
         }
-        else if x == size.1-1 {
+        else if x == size.0-1 {
             xvals[2] = 0
         }
         if y == 0 {
-            yvals[0] = size.0-1
+            yvals[0] = size.1-1
         }
-        else if y == size.0-1 {
+        else if y == size.1-1 {
             
             yvals[2] = 0
         }
@@ -138,7 +152,7 @@ class GameOfLifeDriver {
     //start running the game
     func startGame() {
         running = true
-        gameTimer = Timer(timeInterval: 1, repeats: true, block: {_ in
+        gameTimer = Timer.scheduledTimer(withTimeInterval: speed, repeats: true, block: {_ in
             self.cycle()
         })
     }

@@ -22,11 +22,9 @@ struct ContentView: View {
                 //zstack to display on top of each other
                 ZStack(alignment: Alignment.topLeading) {
                     ControlOverlay()
-                        .environmentObject(self.sharedState)
                         .zIndex(10)
                     
                     GameView(showGrid: true)
-                        .environmentObject(self.sharedState)
                         .zIndex(5)
                     
                 }
